@@ -43,7 +43,7 @@ public class Startup
 
                 // Validate id of application for which the token was created
                 // In this case the CC client application 
-                validateAccessTokenPolicy.RequireClaim("azp", "b178f3a5-7588-492a-924f-72d7887b7e48");
+                validateAccessTokenPolicy.RequireClaim("azp", "09c26636-5e0c-4ff6-b551-e24d489046c9");
 
                 // only allow tokens which used "Private key JWT Client authentication"
                 // // https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens
@@ -62,7 +62,7 @@ public class Startup
             var securityScheme = new OpenApiSecurityScheme
             {
                 Name = "JWT Authentication",
-                Description = "Enter JWT Bearer token **_only_**",
+                Description = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJhcGk6Ly8wOWMyNjYzNi01ZTBjLTRmZjYtYjU1MS1lMjRkNDg5MDQ2YzkiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85YmM0MTYyNi05MmU0LTQ0MWItOGMzMy1iNzdlODEyZDI2ZGEvIiwiaWF0IjoxNjU4MjM2MzIyLCJuYmYiOjE2NTgyMzYzMjIsImV4cCI6MTY1ODI0MDIyMiwiYWlvIjoiRTJaZ1lQaW1sZjBzcWZsYThvK2JGbytmaFlmZUJRQT0iLCJhcHBpZCI6IjA5YzI2NjM2LTVlMGMtNGZmNi1iNTUxLWUyNGQ0ODkwNDZjOSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzliYzQxNjI2LTkyZTQtNDQxYi04YzMzLWI3N2U4MTJkMjZkYS8iLCJvaWQiOiIyNGUwMGQ2YS1iNTZhLTQxYmUtYmE5ZC1hZTYzMTU1ZWVhZTAiLCJyaCI6IjAuQVM4QUpoYkVtLVNTRzBTTU03ZC1nUzBtMmpabXdna01YdlpQdFZIaVRVaVFSc2t2QUFBLiIsInN1YiI6IjI0ZTAwZDZhLWI1NmEtNDFiZS1iYTlkLWFlNjMxNTVlZWFlMCIsInRpZCI6IjliYzQxNjI2LTkyZTQtNDQxYi04YzMzLWI3N2U4MTJkMjZkYSIsInV0aSI6ImFhLTN2WjVRNDBxb1ZsalZWUzhxQUEiLCJ2ZXIiOiIxLjAifQ.ucAd4v2BU5Y3khMxSjUZnkIRgR7ePiAunSsInXSsJvTfhKsWCYx4Ot1JlcwrjsEIS_ewzqtD77OYCHYTL18BBDXCYzFkhENtdnqs51SiBJqyegfnBF3eAAeU-A8QaAq-cbiBxWpYOmpUtQenToQzfYOAGFvXGiAM3yWvaQhvPRWDRjByHiIP73YlnDaQkq6UH3ec_L-I5SuZ_VZaIdpWFYoa1-3JCtAyiATmCfZSA4JYtyvt1zJ7ez1RZtRKN82ePCEfhB7g--_mfEVXMABkaprELN4KMMrDzJigKAIYHqnZ2IJW9TXUcSFF7RRxOHVBLfXDmOtZKkiSX1-DQOZBQA",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
                 Scheme = "bearer", // must be lower case

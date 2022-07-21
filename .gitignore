@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/ServiceApi
+/ServiceApi/bin/Debug/net6.0
+/ServiceApi/obj
+/ServiceApiClientConsole/bin/Debug/net6.0
+/ServiceApiClientConsole/obj

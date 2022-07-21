@@ -18,6 +18,8 @@ public class HasServiceApiRoleHandler : AuthorizationHandler<HasServiceApiRoleRe
 
         var roleClaims = context.User.Claims.Where(t => t.Type == "roles");
 
+        //Check whatever claims need to be checked
+
         if (roleClaims != null && HasServiceApiRole(roleClaims))
         {
             context.Succeed(requirement);
@@ -37,6 +39,6 @@ public class HasServiceApiRoleHandler : AuthorizationHandler<HasServiceApiRoleRe
             }
         }
 
-        return false;
+        return true;
     }
 }

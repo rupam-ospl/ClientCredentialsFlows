@@ -7,3 +7,6 @@
 /ServiceApi/obj
 /ServiceApiClientConsole/bin/Debug/net6.0
 /ServiceApiClientConsole/obj
+/ClientAppCertificateFlow/bin/Debug/net6.0
+/ClientAppCertificateFlow/obj
+/packages

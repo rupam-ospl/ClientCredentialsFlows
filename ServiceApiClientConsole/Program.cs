@@ -1,25 +1,32 @@
 using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Client;
+using Azure.Identity;
 
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddUserSecrets("78cf2604-554c-4a6e-8846-3505f2c0697d")
-    .AddJsonFile("appsettings.json");
-
-var configuration = builder.Build();
-
-// 1. Client client credentials client
-var app = ConfidentialClientApplicationBuilder
-    .Create(configuration["AzureADServiceApi:ClientId"])
-    .WithClientSecret(configuration["AzureADServiceApi:ClientSecret"])
-    .WithAuthority(configuration["AzureADServiceApi:Authority"])
+// Read appsettings to build Configuration
+IConfigurationRoot _configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+    .AddJsonFile("appsettings.json", false)
     .Build();
 
-var scopes = new[] { configuration["AzureADServiceApi:Scope"] };
+// Get the certificate
+var cert = await GetCertificateAsync();
 
-// 2. Get access token
-var authResult = await app.AcquireTokenForClient(scopes)   
+// 1. Get Scope and Authority from appsettings
+var scope = new[] {_configuration["CallApi:ScopeForAccessToken"]};
+var authority = $"{_configuration["CallApi:Instance"]}{_configuration["CallApi:TenantId"]}";
+
+// Build the ConfidentialClientApplicationBuilder
+IConfidentialClientApplication app = ConfidentialClientApplicationBuilder.Create(_configuration["CallApi:ClientId"])
+    .WithAuthority(new Uri(authority))
+    .WithCertificate(cert)
+    .Build();
+
+// Get Access token
+var authResult = await app.AcquireTokenForClient(scope) 
     .ExecuteAsync();
 
 if(authResult == null)
@@ -33,7 +40,7 @@ else
     // 3. Use access token to access token
     var client = new HttpClient
     {
-        BaseAddress = new Uri(configuration["AzureADServiceApi:ApiBaseAddress"])
+        BaseAddress = new Uri(_configuration["AzureADServiceApi:ApiBaseAddress"])
     };
 
     client.DefaultRequestHeaders.Authorization 
@@ -47,4 +54,34 @@ else
     {
         Console.WriteLine(await response.Content.ReadAsStringAsync());
     }
+
+   
 }
+
+async Task<X509Certificate2> GetCertificateAsync()
+{
+    // Get KV Url 
+    var vaultBaseUrl = _configuration["CallApi:ClientCertificates:0:KeyVaultUrl"];
+
+    // Get the name of the certificate from appsettings
+    var certName = _configuration["CallApi:ClientCertificates:0:KeyVaultCertificateName"];
+
+
+    // Create the secret client object (in this case using AzureCliCredential)
+    var secretClient = new SecretClient(vaultUri: new Uri(vaultBaseUrl), credential: new AzureCliCredential());
+
+
+
+    // Retrieve the secret from KV using the secret client. (This is the private key)
+    KeyVaultSecret secret = await secretClient.GetSecretAsync(certName);
+
+    // Private Key to Base 64
+    var privateKeyBytes = Convert.FromBase64String(secret.Value);
+
+    // New X509 Certificate object
+    var certificateWithPrivateKey = new X509Certificate2(privateKeyBytes);
+
+    return certificateWithPrivateKey;
+}
+
+

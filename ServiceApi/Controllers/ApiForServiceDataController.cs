@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceApi.Controllers;
 
-[Authorize(Policy = "ValidateAccessTokenPolicy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(Policy = "ValidateAccessTokenPolicy")]
 [ApiController]
 [Route("[controller]")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ServiceApi.Policies;
     
-public class HasServiceApiRoleHandler : AuthorizationHandler<HasServiceApiRoleRequirement>
+public class HasCharityAccountsReadAllRoleHandler : AuthorizationHandler<HasCharityAccountsReadAllRoleRequirement>
 {
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasServiceApiRoleRequirement requirement)
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasCharityAccountsReadAllRoleRequirement requirement)
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
@@ -19,7 +19,6 @@ public class HasServiceApiRoleHandler : AuthorizationHandler<HasServiceApiRoleRe
         var roleClaims = context.User.Claims.Where(t => t.Type == "roles");
 
         //Check whatever claims need to be checked
-
         if (roleClaims != null && HasServiceApiRole(roleClaims))
         {
             context.Succeed(requirement);
@@ -30,15 +29,7 @@ public class HasServiceApiRoleHandler : AuthorizationHandler<HasServiceApiRoleRe
 
     private static bool HasServiceApiRole(IEnumerable<Claim> roleClaims)
     {
-        // we could also validate the "access_as_application" scope
-        foreach (var role in roleClaims)
-        {
-            if ("service-api" == role.Value)
-            {
-                return true;
-            }
-        }
-
-        return true;
+        
+        return roleClaims.Any(role => "AppRole.CharityAccounts.Read.All" == role.Value);
     }
 }
